@@ -22,6 +22,9 @@ setopt inc_append_history
 setopt share_history # share command history data
 
 export EDITOR=vim
+export PIPENV_COLORBLIND=1
+
+alias genpass="cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1"
 
 # Docker aliases
 alias drmi='docker rmi $(docker images --filter dangling=true --quiet)'
@@ -29,12 +32,18 @@ alias drmc='docker rm $(docker ps -aq --filter status=exited)'
 
 # Git aliases
 alias gitl='git log --oneline --graph --decorate --all'
+alias gitclean='git branch --merged master|grep -v "^[ *]*master$"|xargs git branch -d'
 function gitlo() {
-	git log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cred%x09%ai%Creset %C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+  git log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cred%x09%ai%Creset %C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 }
 
 # Python aliases
 alias watchtest='. bin/activate && git ls-files|entr nosetests --ignore-files=flycheck* tests'
+
+# Golang
+export GOROOT="$(brew --prefix golang)/libexec"
+export GOPATH="${HOME}/.go"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 # google cloud
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
@@ -44,3 +53,11 @@ alias filetree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 
 alias history='fc -il 1'
 alias make-folder-image='ffmpeg -i "`ls -1|head -1`" -an -vcodec copy Folder.jpg'
 
+# python
+export PATH="~/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
+alias k='kubectl -n $NAMESPACE'
+
+eval "$(direnv hook zsh)"
