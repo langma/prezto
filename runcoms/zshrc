@@ -55,6 +55,7 @@ alias make-folder-image='ffmpeg -i "`ls -1|head -1`" -an -vcodec copy Folder.jpg
 
 # python
 export PATH="~/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
