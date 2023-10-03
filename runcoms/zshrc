@@ -11,6 +11,8 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+HISTFILE=~/Documents/dot-files/.zsh_history
+export PATH="/opt/homebrew/bin:$PATH"
 
 setopt append_history
 setopt extended_history
@@ -22,7 +24,6 @@ setopt inc_append_history
 setopt share_history # share command history data
 
 export EDITOR=vim
-export PIPENV_COLORBLIND=1
 
 alias genpass="cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1"
 
@@ -46,8 +47,8 @@ export GOPATH="${HOME}/.go"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 # google cloud
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
 
 alias filetree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'"
 alias history='fc -il 1'
@@ -59,6 +60,13 @@ eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
-alias k='kubectl -n $NAMESPACE'
+# kubectl
+source <(kubectl completion zsh)
+alias k=kubectl
+complete -F __start_kubectl k
 
 eval "$(direnv hook zsh)"
+
+# set openjdk11 from brew to path
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@11"
